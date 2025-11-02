@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Actions\ApproveQuote;
 use App\Actions\AssignOwner;
-use App\Actions\UpdateDealStage;
 use App\Actions\UpdateStatus;
 use App\Models\Deal;
 use App\Models\Lead;
@@ -17,15 +16,12 @@ class SalesManagerService
 
     protected $assignOwner;
 
-    protected $updateDealStage;
-
     protected $updateStatus;
 
-    public function __construct(ApproveQuote $approveQuote, AssignOwner $assignOwner, UpdateDealStage $updateDealStage, UpdateStatus $updateStatus)
+    public function __construct(ApproveQuote $approveQuote, AssignOwner $assignOwner, UpdateStatus $updateStatus)
     {
         $this->approveQuote = $approveQuote;
         $this->assignOwner = $assignOwner;
-        $this->updateDealStage = $updateDealStage;
         $this->updateStatus = $updateStatus;
     }
 
@@ -68,7 +64,7 @@ class SalesManagerService
         try {
             $deal = Deal::where('id', $request->deal_id)->first();
 
-            $this->updateDealStage->handle($deal, $request->stage);
+            $this->updateStatus->handle($deal, $request->stage);
         } catch (\Throwable $th) {
             throw $th;
         }

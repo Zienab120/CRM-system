@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->enum('status', ['draft', 'pending_approval', 'approved', 'rejected', 'sent'])->default('draft');
 
-            $table->foreignId('approved_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade');
 
             $table->text('approval_reason')->nullable();
 
