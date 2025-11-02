@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Actions;
 
@@ -9,6 +9,7 @@ class UpdateStatus
     public function handle(EloquentModel $model, $status)
     {
         $model->status = $status;
+        $model->resolved_at = $status === 'resolved' ? now() : null;
         $model->save();
 
         // event(new \App\Events\OwnerAssigned($model, $user));

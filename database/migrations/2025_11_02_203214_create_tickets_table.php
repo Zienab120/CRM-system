@@ -11,26 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('deals', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->id();
 
-            $table->string('title');
-            $table->string('stage');
+            $table->string('subject');
+
+            $table->enum('status', ['open', 'in_progress', 'resolved'])->default('open');
+            $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
 
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade');
-            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
 
-            $table->decimal('probability');
-            $table->decimal('amount');
-
-            $table->string('currency', 5);
-
-            $table->unsignedTinyInteger('pipeline_id');
-
-            $table->json('custom_fields')->nullable();
-
-            $table->timestamp('close_expected_at');
+            $table->timestamp('resolved_at')->nullable();
             $table->timestamps();
         });
     }
@@ -40,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('deals');
+        Schema::dropIfExists('tickets');
     }
 };
