@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade');
             $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
-            $table->foreignId('onwer_id')->constrained('users')->onDelete('cascade'); // sales manager
+            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade'); // sales manager
 
             $table->enum('status', ['new', 'qualified', 'unqualified'])->default('new')->index();
 
