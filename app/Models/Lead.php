@@ -17,7 +17,7 @@ class Lead extends Model
     protected $fillable = [
         'contact_id',
         'company_id',
-        'onwer_id',
+        'owner_id',
         'status',
         'source',
         'score',
@@ -45,6 +45,6 @@ class Lead extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(User::class, 'onwer_id');
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }
