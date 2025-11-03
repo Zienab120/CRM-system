@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
 
+            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('deal_id')->constrained('deals')->onDelete('cascade');
+
             $table->morphs('client');
 
             $table->json('items');
