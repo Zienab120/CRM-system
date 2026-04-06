@@ -9,32 +9,43 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CampaignMail extends Mailable
+class MarketingMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $template, $lead;
+    protected $link;
+    protected $user;
+    protected $body;
     /**
      * Create a new message instance.
      */
-    public function __construct($template, $lead)
+
+
+    public function __construct($user, $body, $link = null)
     {
-        $this->template = $template;
-        $this->lead = $lead;
+        $this->user = $user;
+        $this->body = $body;
+        $this->link = $link;
     }
 
     public function build()
     {
-        return $this->subject('Campaign Mail')
-            ->html($this->template);
+        return $this->subject('Special Marketing Offer')
+            ->view('emails.marketing')
+            ->with([
+                'user' => $this->user,
+                'body' => $this->body,
+                'link' => $this->link ?? 'https://yourwebsite.com'
+            ]);
     }
+
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Campaign Mail',
+            subject: 'Marketing Mail',
         );
     }
 
