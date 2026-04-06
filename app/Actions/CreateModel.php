@@ -12,5 +12,7 @@ class CreateModel
 
         $model->fill($data);
         $model->save();
+
+        return $model;
     }
 }

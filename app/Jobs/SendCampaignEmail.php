@@ -32,7 +32,8 @@ class SendCampaignEmail implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::queue()->to($this->lead->owner->email)->send(new CampaignMail($this->campaign->template, $this->lead));
+        Mail::queue()->to($this->lead->owner->email)
+            ->send(new CampaignMail($this->campaign->template, $this->lead));
 
         $this->campaign->update(['status' => 'sent']);
 
@@ -40,6 +41,5 @@ class SendCampaignEmail implements ShouldQueue
             'status' => 'sent',
             'sent_at' => now(),
         ]);
-
     }
 }

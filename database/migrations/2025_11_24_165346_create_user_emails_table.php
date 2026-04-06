@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('email_templates', function (Blueprint $table) {
+        Schema::create('user_emails', function (Blueprint $table) {
             $table->id();
 
-            $table->string('title');
+            $table->string('email', 100)->unique();
+            $table->boolean('is_mail_sent')->default(false);
 
-            $table->text('subject');
-            $table->longText('body');
+            $table->unsignedSmallInteger('score')->default(0);
 
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->softDeletes();
 
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('email_templates');
+        Schema::dropIfExists('user_emails');
     }
 };
