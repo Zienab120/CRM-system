@@ -17,11 +17,13 @@ class Lead extends Model
     protected $fillable = [
         'contact_id',
         'company_id',
-        'owner_id',
+        'assigned_to',
         'status',
         'source',
         'score',
         'notes',
+        'assigned_by',
+
     ];
 
     /**

@@ -141,7 +141,7 @@ class SalesRepresentativeService
                 ]);
 
                 Deal::create([
-                    'title' => 'New Deal from '.$lead->name,
+                    'title' => 'New Deal from ' . $lead->name,
                     'company_id' => $lead->company_id,
                     'contact_id' => $contact->id,
                     'amount' => 0,

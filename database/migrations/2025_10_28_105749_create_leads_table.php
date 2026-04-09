@@ -16,9 +16,10 @@ return new class extends Migration
 
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade');
             $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
-            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade'); // sales manager
+            $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade'); // sales manager
+            $table->foreignId('assigned_by')->constrained('users')->onDelete('cascade'); // who assigned the lead
 
-            $table->enum('status', ['new', 'qualified', 'unqualified'])->default('new')->index();
+            $table->enum('status', ['new', 'working', 'qualified', 'unqualified'])->default('new')->index();
 
             $table->string('source');
 

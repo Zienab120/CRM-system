@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\CampaignSend;
 use App\Models\Lead;
+use App\Models\UserEmail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -26,27 +27,24 @@ class SendCampaign implements ShouldQueue
      */
     public function handle(): void
     {
-        $filters = json_decode($this->campaign->audience_filters, true);
+        // $filters = json_decode($this->campaign->audience_filters, true);
+        // $leads = $this->getLeads($filters);
 
-        $leads = $this->getLeads($filters);
+        UserEmail::chunkById(1000, function ($lead) {
 
-        $leads->chunk(100)->each(function ($leadChunk) {
-            foreach ($leadChunk as $lead) {
+            $send = CampaignSend::create([
+                'campaign_id' => $this->campaign->id,
+                'lead_id' => $lead->id,
+                'status' => 'queued',
+            ]);
 
-                $send = CampaignSend::create([
-                    'campaign_id' => $this->campaign->id,
-                    'lead_id' => $lead->id,
-                    'status' => 'queued',
-                ]);
-
-                dispatch(new SendCampaignEmail($this->campaign, $lead, $send));
-            }
+            dispatch(new SendCampaignEmail($this->campaign, $lead, $send));
         });
 
         $this->campaign->update(['status' => 'sending']);
     }
 
-    private function getLeads($filters)
+    /*private function getLeads($filters)
     {
         $query = Lead::query()->with('owner');
 
@@ -58,5 +56,5 @@ class SendCampaign implements ShouldQueue
         }
 
         return $query->get();
-    }
+    }*/
 }
