@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\AssignLeadToSalesRep;
+use App\Jobs\ImportLeadsJob;
 use App\Models\Lead;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -37,5 +38,11 @@ class LeadService
         $user = Auth::user();
         if ($salesRepID) $lead->update(['assigned_to' => $salesRepID, 'assigned_by' => $user->id, 'status' => 'working']);
         else AssignLeadToSalesRep::dispatch($leadID, $salesRepID, $user);
+    }
+
+    public function importLeads($file)
+    {
+        $path = $file->store('imports');
+        ImportLeadsJob::dispatch($path, Auth::id());
     }
 }
