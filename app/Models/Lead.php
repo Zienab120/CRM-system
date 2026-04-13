@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Models;
 
@@ -48,5 +48,14 @@ class Lead extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function scopeForSalesRep($query, int $saleRepID, array $filters = [])
+    {
+        return $query->where('assigned_to', $saleRepID)
+            ->where(function ($q) use ($filters) {
+                $q->when($filters['status'] ?? null, fn($q, $status) => $q->where('status', $status))
+                    ->when($filters['source'] ?? null, fn($q, $source) => $q->where('source', $source));
+            });
     }
 }
