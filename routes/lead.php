@@ -7,4 +7,9 @@ Route::middleware('auth:sanctum')->prefix('leads')->controller(LeadController::c
     Route::post('/create', 'createLead');
     Route::post('/{leadID}/assign/{salesRepID?}', 'assignLead');
     Route::post('/import', 'importLeads');
+    Route::get('/sales-rep/{salesRepID}', 'getPrioritizedLeads');
+    Route::get('/{leadID}', 'getLeadDetails');
+    Route::get('/{leadID}/notes', 'getLeadNotes');
+    Route::post('/{leadID}/activities', 'addActivityToLead');
+    Route::post('/deals/{dealID}/close', 'closeDeal');
 });
