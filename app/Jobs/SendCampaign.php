@@ -27,26 +27,33 @@ class SendCampaign implements ShouldQueue
      */
     public function handle(): void
     {
-        // $filters = json_decode($this->campaign->audience_filters, true);
-        // $leads = $this->getLeads($filters);
+        $filters = json_decode($this->campaign->audience_filters, true);
+        $leads = $this->getLeads($filters);
 
-        UserEmail::chunkById(1000, function ($lead) {
-
+        if ($leads) Lead::chunkById(500, function ($lead) use ($leads) {
             $send = CampaignSend::create([
                 'campaign_id' => $this->campaign->id,
                 'lead_id' => $lead->id,
                 'status' => 'queued',
             ]);
+            SendCampaignEmail::dispatch($this->campaign, $lead, $send);
+        });
 
-            dispatch(new SendCampaignEmail($this->campaign, $lead, $send));
+        UserEmail::chunkById(1000, function ($lead) {
+            $send = CampaignSend::create([
+                'campaign_id' => $this->campaign->id,
+                'lead_id' => $lead->id,
+                'status' => 'queued',
+            ]);
+            SendCampaignEmail::dispatch($this->campaign, $lead, $send);
         });
 
         $this->campaign->update(['status' => 'sending']);
     }
 
-    /*private function getLeads($filters)
+    private function getLeads($filters)
     {
-        $query = Lead::query()->with('owner');
+        $query = Lead::query();
 
         foreach ($filters as $filter) {
             $query->where($filter['field'], $filter['operator'], $filter['value'])
@@ -56,5 +63,5 @@ class SendCampaign implements ShouldQueue
         }
 
         return $query->get();
-    }*/
+    }
 }
