@@ -8,6 +8,20 @@ class Deal extends Model
 {
     protected $table = 'deals';
 
+    protected $fillable = [
+        'title',
+        'stage',
+        'contact_id',
+        'company_id',
+        'owner_id',
+        'amount',
+        'currency',
+        'probability',
+        'close_expected_at',
+        'custom_fields',
+        'pipeline_id',
+    ];
+
     public function owner()
     {
         return $this->belongsTo(User::class);
